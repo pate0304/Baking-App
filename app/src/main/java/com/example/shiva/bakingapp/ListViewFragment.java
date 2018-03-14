@@ -35,7 +35,7 @@ public class ListViewFragment extends android.support.v4.app.Fragment {
     RecyclerView recyclerView;
 
     public ArrayList<Model> arrayList = new ArrayList<>();
-
+    RVAdapter adapter;
 
     public ListViewFragment() {
 
@@ -48,14 +48,15 @@ public class ListViewFragment extends android.support.v4.app.Fragment {
         View rootView = inflater.inflate(R.layout.listview_content, container, false);
 
 
-        RVAdapter adapter = new RVAdapter();
+        adapter = new RVAdapter();
         if (savedInstanceState == null) {
             getRecipies();
 
         } else {
             arrayList = (ArrayList<Model>) savedInstanceState.getSerializable("response");
             Log.d("SIZE", String.valueOf(arrayList.size()));
-            RVAdapter.setModelArrayList(arrayList);
+            adapter.setModelArrayList(arrayList);
+
         }
 
         recyclerView = rootView.findViewById(R.id.rv_list);
@@ -66,7 +67,6 @@ public class ListViewFragment extends android.support.v4.app.Fragment {
             recyclerView.setLayoutManager((new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)));
         }
         recyclerView.setHasFixedSize(true);
-
 
 
         recyclerView.setAdapter(adapter);
@@ -83,7 +83,7 @@ public class ListViewFragment extends android.support.v4.app.Fragment {
                     if (response.body() != null) {
 
                         arrayList.addAll(response.body());
-                        RVAdapter.setModelArrayList(arrayList);
+                        adapter.setModelArrayList(arrayList);
 
                     }
                     Log.d("400models.size", String.valueOf(arrayList.size()));
@@ -100,8 +100,8 @@ public class ListViewFragment extends android.support.v4.app.Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable("response", arrayList);
-        Log.d("arraylistvals", arrayList.get(0).getName());
+        outState.putSerializable("response", this.arrayList);
+        Log.d("arraylistvals", this.arrayList.get(0).getName());
     }
 
     public boolean isOnline(Context context) {

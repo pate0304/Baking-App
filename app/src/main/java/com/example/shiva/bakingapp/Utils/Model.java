@@ -1,5 +1,8 @@
 package com.example.shiva.bakingapp.Utils;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -9,7 +12,7 @@ import java.util.List;
  * Created by shiva on 2018-02-24.
  */
 
-public class Model {
+public class Model implements Parcelable {
 
 
     @SerializedName("id")
@@ -30,6 +33,33 @@ public class Model {
     @SerializedName("image")
     @Expose
     private String image;
+
+    protected Model(Parcel in) {
+        if (in.readByte() == 0) {
+            id = null;
+        } else {
+            id = in.readInt();
+        }
+        name = in.readString();
+        if (in.readByte() == 0) {
+            servings = null;
+        } else {
+            servings = in.readInt();
+        }
+        image = in.readString();
+    }
+
+    public static final Creator<Model> CREATOR = new Creator<Model>() {
+        @Override
+        public Model createFromParcel(Parcel in) {
+            return new Model(in);
+        }
+
+        @Override
+        public Model[] newArray(int size) {
+            return new Model[size];
+        }
+    };
 
     public Integer getId() {
         return id;
@@ -79,8 +109,31 @@ public class Model {
         this.image = image;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
 
-    public class Ingredient {
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        if (id == null) {
+            parcel.writeByte((byte) 0);
+        } else {
+            parcel.writeByte((byte) 1);
+            parcel.writeInt(id);
+        }
+        parcel.writeString(name);
+        if (servings == null) {
+            parcel.writeByte((byte) 0);
+        } else {
+            parcel.writeByte((byte) 1);
+            parcel.writeInt(servings);
+        }
+        parcel.writeString(image);
+    }
+
+
+    public class Ingredient  {
 
         @SerializedName("quantity")
         @Expose
@@ -118,7 +171,7 @@ public class Model {
 
     }
 
-    public class Step {
+    public class Step implements java.io.Serializable {
 
         @SerializedName("id")
         @Expose

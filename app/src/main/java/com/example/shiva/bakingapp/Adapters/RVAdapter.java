@@ -20,16 +20,16 @@ import java.util.ArrayList;
 
 public class RVAdapter extends RecyclerView.Adapter<RVAdapter.containerClass> {
 
-    private static ArrayList<Model> models = new ArrayList<>();
+    private  ArrayList<Model> models = new ArrayList<>();
     int[] imageResourceIds=new int[4];
 
     public RVAdapter() {
 
     }
 
-    public static void setModelArrayList(ArrayList<Model> modelArrayList) {
-        models = modelArrayList;
-
+    public void setModelArrayList(ArrayList<Model> modelArrayList) {
+        this.models = modelArrayList;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -76,6 +76,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.containerClass> {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
 
                 }
             });
