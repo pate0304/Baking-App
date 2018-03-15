@@ -133,7 +133,7 @@ public class Model implements Parcelable {
     }
 
 
-    public class Ingredient  {
+    public class Ingredient implements Parcelable {
 
         @SerializedName("quantity")
         @Expose
@@ -169,9 +169,18 @@ public class Model implements Parcelable {
             this.ingredient = ingredient;
         }
 
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel parcel, int i) {
+
+        }
     }
 
-    public class Step implements java.io.Serializable {
+    public class Step implements Parcelable {
 
         @SerializedName("id")
         @Expose
@@ -229,6 +238,15 @@ public class Model implements Parcelable {
             this.thumbnailURL = thumbnailURL;
         }
 
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel parcel, int i) {
+
+        }
     }
 }
 

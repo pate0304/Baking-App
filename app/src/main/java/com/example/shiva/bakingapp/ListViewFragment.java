@@ -7,12 +7,15 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.shiva.bakingapp.Adapters.RVAdapter;
 import com.example.shiva.bakingapp.Utils.Model;
@@ -34,9 +37,9 @@ public class ListViewFragment extends android.support.v4.app.Fragment {
 
     RecyclerView recyclerView;
 
-    public ArrayList<Model> arrayList = new ArrayList<>();
+    public ArrayList<Model> arrayList;
     RVAdapter adapter;
-
+    RecyclerView.LayoutManager mLayoutManager;
     public ListViewFragment() {
 
     }
@@ -47,6 +50,7 @@ public class ListViewFragment extends android.support.v4.app.Fragment {
 
         View rootView = inflater.inflate(R.layout.listview_content, container, false);
 
+        arrayList=new ArrayList<>();
 
         adapter = new RVAdapter();
         if (savedInstanceState == null) {
@@ -59,8 +63,9 @@ public class ListViewFragment extends android.support.v4.app.Fragment {
 
         }
 
-        recyclerView = rootView.findViewById(R.id.rv_list);
 
+
+        recyclerView = rootView.findViewById(R.id.rv_list);
         if (getResources().getConfiguration().orientation == 1) {
             recyclerView.setLayoutManager((new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)));
         } else {
