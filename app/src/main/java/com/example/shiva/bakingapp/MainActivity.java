@@ -5,7 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
-
+    ListViewFragment listViewFragment;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -13,7 +13,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        ListViewFragment listViewFragment = new ListViewFragment();
+        listViewFragment = new ListViewFragment();
 
         FragmentManager fragmentManager = getSupportFragmentManager();
 
@@ -22,8 +22,20 @@ public class MainActivity extends AppCompatActivity {
                 .commit();
 
 
-
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (getSupportFragmentManager().findFragmentByTag("recipedetails") != null)
+            getSupportFragmentManager().findFragmentByTag("recipedetails").setRetainInstance(true);
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (getSupportFragmentManager().findFragmentByTag("recipedetails") != null)
+            getSupportFragmentManager().findFragmentByTag("recipedetails").getRetainInstance();
+
+    }
 }

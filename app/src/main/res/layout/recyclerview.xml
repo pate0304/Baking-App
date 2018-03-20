@@ -16,7 +16,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:contentScrim="?attr/colorPrimary"
-            app:expandedTitleGravity="top"  app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed">
+            app:expandedTitleGravity="top"
+            app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed">
+
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/collapsableToolbar"

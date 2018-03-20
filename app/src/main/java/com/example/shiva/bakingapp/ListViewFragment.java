@@ -7,15 +7,12 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.example.shiva.bakingapp.Adapters.RVAdapter;
 import com.example.shiva.bakingapp.Utils.Model;
@@ -37,9 +34,11 @@ public class ListViewFragment extends android.support.v4.app.Fragment {
 
     RecyclerView recyclerView;
 
+
     public ArrayList<Model> arrayList;
     RVAdapter adapter;
     RecyclerView.LayoutManager mLayoutManager;
+
     public ListViewFragment() {
 
     }
@@ -50,19 +49,16 @@ public class ListViewFragment extends android.support.v4.app.Fragment {
 
         View rootView = inflater.inflate(R.layout.listview_content, container, false);
 
-        arrayList=new ArrayList<>();
+        arrayList = new ArrayList<>();
 
         adapter = new RVAdapter();
         if (savedInstanceState == null) {
             getRecipies();
-
         } else {
             arrayList = (ArrayList<Model>) savedInstanceState.getSerializable("response");
             Log.d("SIZE", String.valueOf(arrayList.size()));
             adapter.setModelArrayList(arrayList);
-
         }
-
 
 
         recyclerView = rootView.findViewById(R.id.rv_list);
@@ -106,7 +102,6 @@ public class ListViewFragment extends android.support.v4.app.Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable("response", this.arrayList);
-        Log.d("arraylistvals", this.arrayList.get(0).getName());
     }
 
     public boolean isOnline(Context context) {

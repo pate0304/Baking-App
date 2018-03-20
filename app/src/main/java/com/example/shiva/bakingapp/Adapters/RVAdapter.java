@@ -93,15 +93,15 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.containerClass> {
                     Bundle b = new Bundle();
                     b.putParcelableArrayList("ingredientList", (ArrayList<? extends Parcelable>) ingredientList);
                     b.putParcelableArrayList("stepList", (ArrayList<? extends Parcelable>) stepList);
-                    b.putString("name",models.get(getAdapterPosition()).getName());
+                    b.putString("name", models.get(getAdapterPosition()).getName());
                     recipeDetailFragment.setArguments(b);
                     FragmentManager fragmentManager = ((AppCompatActivity) itemView.getContext()).getSupportFragmentManager();
 
                     fragmentManager.beginTransaction()
-                            .setTransition( FragmentTransaction.TRANSIT_FRAGMENT_OPEN )
+                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
 //                            .setCustomAnimations(R.anim.enter_from_right,R.anim.exit_to_left)
-                            .replace(R.id.frame, recipeDetailFragment)
-                            .addToBackStack(null)
+                            .replace(R.id.frame, recipeDetailFragment,"recipedetails")
+                            .addToBackStack("stack")
                             .commit();
 
                 }
