@@ -38,4 +38,18 @@ public class MainActivity extends AppCompatActivity {
             getSupportFragmentManager().findFragmentByTag("recipedetails").getRetainInstance();
 
     }
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+//        if (getFragmentManager().getBackStackEntryCount() > 3) {
+//            getFragmentManager().popBackStack();
+//        } else {
+//            super.onBackPressed();
+//        }
+//        getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        getFragmentManager().popBackStack("stack",FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
+    }
 }

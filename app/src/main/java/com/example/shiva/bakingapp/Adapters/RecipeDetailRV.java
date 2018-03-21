@@ -1,6 +1,11 @@
 package com.example.shiva.bakingapp.Adapters;
 
 import android.content.Context;
+import android.os.Bundle;
+import android.os.Parcelable;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +14,7 @@ import android.widget.TextView;
 
 import com.example.shiva.bakingapp.R;
 import com.example.shiva.bakingapp.Utils.Model;
+import com.example.shiva.bakingapp.viewRecipe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +25,7 @@ import java.util.List;
 
 public class RecipeDetailRV extends RecyclerView.Adapter<RecipeDetailRV.holderClass> {
     List<Model.Step> stepList = new ArrayList<>();
+    public static String name;
 
     @Override
     public RecipeDetailRV.holderClass onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -48,10 +55,28 @@ public class RecipeDetailRV extends RecyclerView.Adapter<RecipeDetailRV.holderCl
     public class holderClass extends RecyclerView.ViewHolder {
         TextView textView;
 
-        public holderClass(View itemView) {
+        public holderClass(final View itemView) {
             super(itemView);
             textView = itemView.findViewById(R.id.textViewRVContent);
+            textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("name", name);
+                    bundle.putInt("stepNum", getAdapterPosition());
+                    bundle.putParcelableArrayList("stepList", (ArrayList<? extends Parcelable>) stepList);
+                    viewRecipe viewRecipe = new viewRecipe();
+                    viewRecipe.setArguments(bundle);
+                    FragmentManager fragmentManager = ((AppCompatActivity) itemView.getContext()).getSupportFragmentManager();
 
+                    fragmentManager.beginTransaction()
+                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+//                            .setCustomAnimations(R.anim.enter_from_right,R.anim.exit_to_left)
+                            .replace(R.id.frame, viewRecipe, "viewRecipe")
+                            .addToBackStack("stack")
+                            .commit();
+                }
+            });
         }
     }
 

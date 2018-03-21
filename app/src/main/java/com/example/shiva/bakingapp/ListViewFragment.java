@@ -56,10 +56,10 @@ public class ListViewFragment extends android.support.v4.app.Fragment {
             getRecipies();
         } else {
             arrayList = (ArrayList<Model>) savedInstanceState.getSerializable("response");
-            Log.d("SIZE", String.valueOf(arrayList.size()));
             adapter.setModelArrayList(arrayList);
         }
 
+        getActivity().setTitle(R.string.app_name);
 
         recyclerView = rootView.findViewById(R.id.rv_list);
         if (getResources().getConfiguration().orientation == 1) {

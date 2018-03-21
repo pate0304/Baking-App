@@ -101,7 +101,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.containerClass> {
                             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
 //                            .setCustomAnimations(R.anim.enter_from_right,R.anim.exit_to_left)
                             .replace(R.id.frame, recipeDetailFragment,"recipedetails")
-                            .addToBackStack("stack")
+                            .addToBackStack(null)
                             .commit();
 
                 }

@@ -1,109 +1,174 @@
 package com.example.shiva.bakingapp;
 
-import android.content.Context;
-import android.net.Uri;
+import android.annotation.SuppressLint;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link viewRecipe.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link viewRecipe#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class viewRecipe extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+import com.example.shiva.bakingapp.Utils.Model;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+import java.util.ArrayList;
+import java.util.List;
 
-    private OnFragmentInteractionListener mListener;
+public class viewRecipe extends Fragment implements View.OnClickListener {
+    private List<Model.Step> stepList;
+    private SimpleExoPlayerView simpleExoPlayerView;
+    private SimpleExoPlayer simpleExoPlayer;
+    private int stepNum;
+    private TextView shortDesc, description;
+    private Button left, right;
+    String name;
+    private Model.Step step;
 
-    public viewRecipe() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment viewRecipe.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static viewRecipe newInstance(String param1, String param2) {
-        viewRecipe fragment = new viewRecipe();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
+    @Nullable
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.view_recipe_layout, container, false);
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        TextView textView = new TextView(getActivity());
-        textView.setText(R.string.hello_blank_fragment);
-        return textView;
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (savedInstanceState != null) {
+            stepList = savedInstanceState.getParcelableArrayList("stepList");
+            stepNum = savedInstanceState.getInt("stepNum");
         } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+            stepList = new ArrayList<>();
+            stepList = getArguments().getParcelableArrayList("stepList");
+            stepNum = getArguments().getInt("stepNum");
+            name = getArguments().getString("name");
         }
+
+
+        shortDesc = rootView.findViewById(R.id.shortDescription);
+        description = rootView.findViewById(R.id.description);
+        left = rootView.findViewById(R.id.left);
+        right = rootView.findViewById(R.id.right);
+
+        left.setOnClickListener(this);
+        right.setOnClickListener(this);
+
+        validateStepsNumber();
+
+        // defining step number for the fragment to work with UI
+        step = new Model.Step();
+        step = stepList.get(stepNum);
+
+        shortDesc.setText(step.getShortDescription());
+        description.setText(step.getDescription());
+        assert savedInstanceState != null;
+        getActivity().setTitle(name);
+
+        simpleExoPlayerView = rootView.findViewById(R.id.player);
+
+        simpleExoPlayerView.setDefaultArtwork(BitmapFactory.decodeResource(getResources(), R.drawable.brownie));
+        Log.d("MAIN ON ARRIVE: ", String.valueOf(getFragmentManager().getBackStackEntryCount()));
+        return rootView;
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (getView() == null) {
+            return;
+        }
+        getView().setFocusableInTouchMode(true);
+        getView().requestFocus();
+        getView().setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+
+                if (keyEvent.getAction() == KeyEvent.ACTION_UP && i == KeyEvent.KEYCODE_BACK) {
+                    getFragmentManager().popBackStack("stack", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                    return true;
+                }
+                return false;
+            }
+        });
+
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+//        String name = getFragmentManager().getBackStackEntryAt(3).getName();
+
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+    @SuppressLint("SetTextI18n")
+    private void validateStepsNumber() {
+        int size = stepList.size() - 1;
+        if (stepNum == 0) {
+            left.setClickable(false);
+            left.setVisibility(View.INVISIBLE);
+        } else {
+            right.setText("Step " + stepNum);
+        }
+
+        if (stepNum == size) {
+            right.setClickable(false);
+            right.setVisibility(View.INVISIBLE);
+            left.setText("Step " + (size - 1));
+        } else {
+            left.setText("Step " + (stepNum - 1));
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putParcelableArrayList("stepList", (ArrayList<? extends Parcelable>) stepList);
+        outState.putInt("stepNum", stepNum);
+    }
+
+
+    @Override
+    public void onClick(View view) {
+
+
+        FragmentManager fragmentManager = (getActivity()).getSupportFragmentManager();
+        switch (view.getId()) {
+            case R.id.left:
+                Bundle bundle = new Bundle();
+                bundle.putString("name", name);
+                bundle.putInt("stepNum", stepNum - 1);
+                bundle.putParcelableArrayList("stepList", (ArrayList<? extends Parcelable>) stepList);
+                viewRecipe viewRecipe = new viewRecipe();
+                viewRecipe.setArguments(bundle);
+                fragmentManager.beginTransaction()
+//                        .setTransition(FragmentTransaction.TRANSIT_ENTER_MASK)
+                        .setCustomAnimations(R.anim.enter_from_left, R.anim.exit_from_right)
+                        .replace(R.id.frame, viewRecipe, "navButtons")
+                        .addToBackStack("navButtons")
+                        .commit();
+                Log.d("left: ", String.valueOf(getFragmentManager().getBackStackEntryCount()));
+                break;
+            case R.id.right:
+                Bundle bundle2 = new Bundle();
+                bundle2.putString("name", name);
+                bundle2.putInt("stepNum", stepNum + 1);
+                bundle2.putParcelableArrayList("stepList", (ArrayList<? extends Parcelable>) stepList);
+                viewRecipe viewRecipe2 = new viewRecipe();
+                viewRecipe2.setArguments(bundle2);
+                fragmentManager.beginTransaction()
+//                        .setTransition(FragmentTransaction.TRANSIT_ENTER_MASK)
+                        .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left)
+                        .replace(R.id.frame, viewRecipe2, "navButtons")
+                        .addToBackStack("navButtons")
+                        .commit();
+                Log.d("right: ", String.valueOf(getFragmentManager().getBackStackEntryCount()));
+                break;
+        }
     }
 }

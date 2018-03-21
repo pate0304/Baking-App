@@ -180,7 +180,7 @@ public class Model implements Parcelable {
         }
     }
 
-    public class Step implements Parcelable {
+    public static class Step implements Parcelable {
 
         @SerializedName("id")
         @Expose
